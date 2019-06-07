@@ -18,7 +18,6 @@ int main(int argc, char* argv[]) {
 		NTHEADER_SIGNATURE    = 0x00004550,
 		TARG_APP = 1;
 
-	// additional information
 	STARTUPINFOA        si{ sizeof(STARTUPINFOA) /*si.cb, set size.*/ };
 	PROCESS_INFORMATION pi;
 
@@ -67,13 +66,6 @@ int main(int argc, char* argv[]) {
 
 			fseek(f, img_dos_header.AddressOfNewExeHeader - ftell(f), SEEK_CUR);
 
-
-			/*auto rbuf = ifs.rdbuf();
-			rbuf->sgetn((char*)&img_dos_header, sizeof img_dos_header);
-			rbuf->pubseekoff(img_dos_header.AddressOfNewExeHeader - ifs.tellg(), std::ios_base::cur, std::ios_base::in);
-
-			uint32_t sig;
-			rbuf->sgetn((char*)&sig, sizeof uint32_t);*/
 			uint32_t sig;
 			fread(&sig, sizeof uint32_t, 1, f);
 			if (sig != NTHEADER_SIGNATURE) return INVALID_NT_HEADER_SIG;
@@ -120,8 +112,4 @@ int main(int argc, char* argv[]) {
 		case INVALID_NT_HEADER_SIG: return INVALID_NT_HEADER_SIG;
 		default: return errno;
 	}
-	//// Close process and thread handles. 
-	//CloseHandle( pi.hProcess );
-	//CloseHandle( pi.hThread );
-
 }
